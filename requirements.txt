@@ -12,8 +12,4 @@ jiwer
 librosa
 soundfile
 torch==1.13.1
-# kenlm==0.1
-# PyAudio==0.2.11
-# tokenizers==0.10.3
-# tqdm==4.64.1
-# zipp==1.0.0
+python-dotenv==0.21.0
