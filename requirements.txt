@@ -1,0 +1,19 @@
+pydub==0.23.1
+youtube-dl==2020.3.24
+youtube-transcript-api==0.3.1
+pytube
+https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
+transformers==4.9.2 
+soundfile
+pyctcdecode==v0.1.0
+https://github.com/kpu/kenlm/archive/master.zip
+datasets==2.11.0
+jiwer
+librosa
+soundfile
+torch==1.13.1
+# kenlm==0.1
+# PyAudio==0.2.11
+# tokenizers==0.10.3
+# tqdm==4.64.1
+# zipp==1.0.0
