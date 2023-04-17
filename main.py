@@ -85,6 +85,6 @@ def main():
         #Delete data files, ready for the next loop
         shutil.rmtree(path_to_data_files)
     
-    final_dataset.push_to_hub("quocanh34/youtube_dataset_v7", token="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")
+    final_dataset.push_to_hub("quocanh34/youtube_dataset_test_2", token="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")
 
 main()

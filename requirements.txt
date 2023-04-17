@@ -7,9 +7,10 @@ transformers==4.9.2
 soundfile
 pyctcdecode==v0.1.0
 https://github.com/kpu/kenlm/archive/master.zip
-datasets==2.11.0
+# datasets==2.11.0
 jiwer
 librosa
 soundfile
 torch==1.13.1
 python-dotenv==0.21.0
+ffmpeg

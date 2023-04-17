@@ -4,6 +4,7 @@ import shutil
 import pandas as pd
 import tqdm
 import yt_dlp as youtube_dl
+import ffmpeg
 
 from collections import OrderedDict
 from functools import partial
