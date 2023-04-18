@@ -5,6 +5,7 @@ sudo apt install build-essential cmake libboost-system-dev libboost-thread-dev l
 cd ..
 curl https://sh.rustup.rs -sSf | sh -s -- -y
 export PATH="$HOME/.cargo/bin:$PATH"
+git clone https://github.com/huggingface/tokenizers
 cd tokenizers/bindings/python
 pip install setuptools_rust
 python setup.py install
