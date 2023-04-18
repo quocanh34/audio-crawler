@@ -1,10 +1,11 @@
-from transformers.file_utils import cached_path, hf_bucket_url
 import os
 import zipfile
-from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import soundfile as sf
 import torch
 import kenlm
+
+from transformers.file_utils import cached_path, hf_bucket_url
+from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 from pyctcdecode import Alphabet, BeamSearchDecoderCTC, LanguageModel
 
 class Wav2Vec2():
