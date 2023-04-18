@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import datasets
 import shutil
+import dotenv
 
 from vctube import VCtube
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -11,7 +12,6 @@ from jiwer import wer
 from utils.dataset import DatasetOperations
 from utils.wav2vec2 import Wav2Vec2
 from utils.wer import filter_wer
-import dotenv
 
 def main():
     # load .env config
@@ -22,12 +22,11 @@ def main():
 
     #get current path
     current_dir = os.getcwd()
-
     print(config_env)
+    
     # read youtube csv file
     youtube_df = pd.read_csv(current_dir + config_env["CSV_LINK"])
 
-    # final_dataset = datasets.load_dataset(config_env["DATASET_URL"])
     my_dataset = {
         "audio": [],
         "transcription": [],
@@ -81,10 +80,20 @@ def main():
 
         # Concatenate the dataset to final dataset
         final_dataset = concatenate_datasets([final_dataset, dataset])
+        
+        #print current data info
+        print("Current index: " + str(index+1))
+        print(final_dataset)
+
+        #push to huggingface if the index is multiple numbers of 1000
+        if (index+1) % 500 == 0:
+            final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_vid_{index+1}", token=config_env["TOKEN"])
+            print("-"*10)
+            print(f"Dataset vid_{index+1} has been pushed to hub!")
+            print("-"*10)
 
         #Delete data files, ready for the next loop
         shutil.rmtree(path_to_data_files)
     
-    final_dataset.push_to_hub("quocanh34/youtube_dataset_test_2", token="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")
-
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_final", token=config_env["TOKEN"])
 main()
