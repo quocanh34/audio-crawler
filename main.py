@@ -23,7 +23,7 @@ def main():
     #get current path
     current_dir = os.getcwd()
     print(config_env)
-    
+
     # read youtube csv file
     youtube_df = pd.read_csv(current_dir + config_env["CSV_LINK"])
 
@@ -86,7 +86,7 @@ def main():
         print(final_dataset)
 
         #push to huggingface if the index is multiple numbers of 1000
-        if (index+1) % 500 == 0:
+        if (index+1) % 5 == 0:
             final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_vid_{index+1}", token=config_env["TOKEN"])
             print("-"*10)
             print(f"Dataset vid_{index+1} has been pushed to hub!")
