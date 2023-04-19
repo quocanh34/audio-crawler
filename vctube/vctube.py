@@ -20,13 +20,22 @@ class VCtube:
     def __init__(self, output_dir: str, youtube_url: str, lang: str) -> None:
         self.output_dir = output_dir
         self.youtube_url = youtube_url
+        self.video_id = youtube_url.split('=')[1]
         self.lang = lang
 
         # Delete directory if existing
         if os.path.exists(self.output_dir):
             shutil.rmtree(self.output_dir, ignore_errors=True)
         os.makedirs(self.output_dir, exist_ok=True)
-
+        
+    def check_vi_available(self):
+        try:
+            transcript_list = YouTubeTranscriptApi.list_transcripts(self.video_id)
+            transcript_list.find_transcript(['vi'])
+            return True
+        except:
+            return False
+        
     def download_audio(self) -> None:
         self.download_path = os.path.join(
             self.output_dir, "wavs/" + '%(id)s.%(ext)s')
