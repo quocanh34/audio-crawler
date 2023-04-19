@@ -98,5 +98,5 @@ def main():
         #Delete data files, ready for the next loop
         shutil.rmtree(path_to_data_files)
     
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_final", token=config_env["TOKEN"])
+    # final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_final", token=config_env["TOKEN"])
 main()
