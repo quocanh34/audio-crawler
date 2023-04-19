@@ -47,7 +47,10 @@ def main():
 
         # Use VCTube to download, split, remove YT videos into audio and transcription
         vc = VCtube(path_to_data_files, youtube_link, lang='vi')
-        vc.operations()
+        if (vc.check_vi_available()):
+            vc.operations()
+        else:
+            print("Failed to get data")
 
         # Transform above data in to Huggingface Dataset
         operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
