@@ -50,7 +50,7 @@ def main():
         if (vc.check_vi_available()):
             vc.operations()
         else:
-            print("Failed to get data")
+            continue
 
         # Transform above data in to Huggingface Dataset
         operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
