@@ -47,10 +47,12 @@ def main():
 
             # Use VCTube to download, split, remove YT videos into audio and transcription
             vc = VCtube(path_to_data_files, youtube_link, lang='vi')
+
             if (vc.check_vi_available()):
                 vc.operations()
             else:
                 continue
+            vc.operations()
             
             
             # Transform above data in to Huggingface Dataset
@@ -102,6 +104,6 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
 
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh", token=config_env["TOKEN"])
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh_v2", token=config_env["TOKEN"])
     print(final_dataset)
 main()

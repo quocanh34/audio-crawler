@@ -31,8 +31,8 @@ class VCtube:
     def check_vi_available(self):
         try:
             transcript = YouTubeTranscriptApi.get_transcript(self.video_id)
-            if len(transcript) == 0:
-                return False
+            # if len(transcript) == 0:
+            #     return False
             transcript_list = YouTubeTranscriptApi.list_transcripts(self.video_id)
             transcript_list.find_transcript(['vi'])
             return True
@@ -107,11 +107,14 @@ class VCtube:
                         [c for c in subtitle[s]['text'] if c not in ('!', '?', ',', '.', '\n', '~', '"', "'")])
                     text.append(subtitle[s]['text'])
                     start.append(subtitle[s]['start'])
+
+                    #####################
                     if subtitle[s]['duration'] >= (subtitle[s + 1]['start'] - subtitle[s]['start']):
                         duration.append(
                             subtitle[s + 1]['start'] - subtitle[s]['start'])
                     else:
                         duration.append(subtitle[s]['duration'])
+                    #####################
 
             except Exception as e:
                 print("error:", e)
@@ -157,13 +160,18 @@ class VCtube:
 
 
 def split_with_caption(audio_path, skip_idx=0, out_ext="wav") -> list:
+
     df = pd.read_csv(audio_path.split('wavs')[0] + 'text/subtitle.csv')
     filename = os.path.basename(audio_path).split('.', 1)[0]
 
     audio = read_audio(audio_path)
     df2 = df[df['id'].apply(str) == filename]
+
+    ####################################################
     df2['end'] = round((df2['start'] + df2['duration']) * 1000).astype(int)
     df2['start'] = round(df2['start'] * 1000).astype(int)
+    ####################################################
+
     edges = df2[['start', 'end']].values.tolist()
 
     audio_paths = []
