@@ -90,7 +90,7 @@ def main():
             print(final_dataset)
 
             #push to huggingface if the index is multiple numbers of 1000
-            if (index+1) % 10 == 0:
+            if (index+1) % 1000 == 0:
                 final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_vid_{index+1}", token=config_env["TOKEN"])
                 print("-"*10)
                 print(f"Dataset vid_{index+1} has been pushed to hub!")
@@ -102,8 +102,6 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
 
-
-    
-    # final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_locfuho", token=config_env["TOKEN"])
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh", token=config_env["TOKEN"])
     print(final_dataset)
 main()
