@@ -30,9 +30,6 @@ class VCtube:
         
     def check_vi_available(self):
         try:
-            transcript = YouTubeTranscriptApi.get_transcript(self.video_id)
-            # if len(transcript) == 0:
-            #     return False
             transcript_list = YouTubeTranscriptApi.list_transcripts(self.video_id)
             transcript_list.find_transcript(['vi'])
             return True
