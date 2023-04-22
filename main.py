@@ -102,6 +102,6 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
 
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh_v2", token=config_env["TOKEN"])
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh", token=config_env["TOKEN"])
     print(final_dataset)
 main()
