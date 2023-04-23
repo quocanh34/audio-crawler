@@ -3,6 +3,7 @@ import pandas as pd
 import datasets
 import shutil
 import dotenv
+import multiprocessing as mp
 
 from vctube import VCtube
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -22,7 +23,6 @@ def main():
 
     #get current path
     current_dir = os.getcwd()
-    # print(config_env)
 
     # read youtube csv file
     youtube_df = pd.read_csv(current_dir + config_env["CSV_LINK"])
@@ -36,7 +36,7 @@ def main():
 
     final_dataset = Dataset.from_dict(my_dataset)
 
-    for index, row in youtube_df.iterrows():
+    for index, row in youtube_df.iloc.iterrows():
         try:
             path_to_data_files = current_dir + config_env["DATA_FILE"]
             path_to_csv = path_to_data_files + config_env["META_DATA"]
@@ -51,6 +51,13 @@ def main():
             if (vc.check_vi_available()):
                 vc.operations()
             else:
+                if (index+1) % 4 == 0:
+                    print("Skipped Index: " + str(index+1))
+                    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
+                    print("-"*10)
+                    print("Dataset has been pushed to hub!")
+                    print("-"*10)
+                    print(final_dataset)
                 continue
             
             # Transform above data in to Huggingface Dataset
@@ -90,8 +97,8 @@ def main():
             print(final_dataset)
 
             #push to huggingface if the index is multiple numbers of 1000
-            if (index+1) % 1000 == 0:
-                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_vid_{index+1}", token=config_env["TOKEN"])
+            if (index+1) % 4 == 0:
+                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
                 print("-"*10)
                 print(f"Dataset vid_{index+1} has been pushed to hub!")
                 print("-"*10)
@@ -101,7 +108,12 @@ def main():
         except Exception as e:
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
-
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_dunglailaptrinh", token=config_env["TOKEN"])
+            continue
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
     print(final_dataset)
-main()
+
+def exception_handler(index):
+    pass
+
+if __name__ == "__main__":
+    main()
