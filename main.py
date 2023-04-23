@@ -51,7 +51,7 @@ def main():
             if (vc.check_vi_available()):
                 vc.operations()
             else:
-                if (index+1) % 4 == 0:
+                if (index+1) % 300 == 0:
                     print("Skipped Index: " + str(index+1))
                     final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
                     print("-"*10)
@@ -81,7 +81,7 @@ def main():
             wav2vec2.get_decoder_ngram_model()
 
             dataset = dataset['train'].map(
-                lambda example: wav2vec2.add_w2v2_label(example), num_proc=4)
+                lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
 
             # Caculate WER between Wav2Vec2 and VCTube transcription
             dataset = dataset.map(lambda example: {"WER": int(
@@ -97,8 +97,8 @@ def main():
             print(final_dataset)
 
             #push to huggingface if the index is multiple numbers of 1000
-            if (index+1) % 4 == 0:
-                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
+            if (index+1) % 300 == 0:
+                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_hope_vid_{index+1}", token=config_env["TOKEN"])
                 print("-"*10)
                 print(f"Dataset vid_{index+1} has been pushed to hub!")
                 print("-"*10)
@@ -109,11 +109,11 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
             continue
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_hope_final", token=config_env["TOKEN"])
     print(final_dataset)
 
-def exception_handler(index):
-    pass
-
 if __name__ == "__main__":
-    main()
+    mp.set_start_method('spawn')
+    p = mp.Process(target=main, daemon=True)
+    p.start()
+    p.join()
