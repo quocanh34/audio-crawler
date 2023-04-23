@@ -36,7 +36,7 @@ def main():
 
     final_dataset = Dataset.from_dict(my_dataset)
 
-    for index, row in youtube_df.iloc.iterrows():
+    for index, row in youtube_df.iterrows():
         try:
             path_to_data_files = current_dir + config_env["DATA_FILE"]
             path_to_csv = path_to_data_files + config_env["META_DATA"]
