@@ -13,3 +13,4 @@ soundfile
 torch==1.13.1
 python-dotenv==0.21.0
 ffmpeg
+unidecode
