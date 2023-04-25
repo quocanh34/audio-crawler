@@ -15,61 +15,6 @@ from utils.dataset import DatasetOperations
 from utils.wav2vec2 import Wav2Vec2
 from utils.wer import filter_wer
 
-def process_dataset(row, config_env, current_dir, q):
-
-    path_to_data_files = current_dir + config_env["DATA_FILE"]
-    path_to_csv = path_to_data_files + config_env["META_DATA"]
-    new_path_to_csv = path_to_data_files + config_env["NEW_META_DATA"]
-    data_folder = path_to_data_files + config_env["DATA_FOLDER"]
-
-    youtube_link = row["youtube link"]
-
-    vc = VCtube(path_to_data_files, youtube_link, lang='vi')
-    if (vc.check_vi_available()):
-        vc.operations()
-    else:
-        return None
-
-    operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
-    operations.create_new_csv()
-    dataset = operations.create_dataset()
-    dataset = operations.remove_column()
-    dataset = operations.cast_column()
-
-    dataset = operations.filter_non_characters()
-    dataset = operations.filter_labels()
-    dataset = operations.filter_audios()
-    dataset = operations.normalize()
-
-    wav2vec2 = Wav2Vec2(cache_path=config_env["CACHE_PATH"], wav2vec2_path=config_env["WAV2VEC2_PATH"])
-    wav2vec2.get_processor()
-    wav2vec2.get_model()
-    wav2vec2.get_lm_file()
-    wav2vec2.get_decoder_ngram_model()
-
-    dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=4)
-    dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
-    dataset = dataset.filter(filter_wer)
-
-    q.put(dataset)
-
-    return dataset
-
-def push_dataset(final_dataset, config_env, index=None):
-    # print('*'*10)
-    # print(index+1)
-    # print('*'*10)
-
-    if index != None and (index+1) % 5 == 0:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
-        print("-"*10)
-        print(f"Dataset vid_{index+1} has been pushed to hub!")
-        print("-"*10)
-    elif index == None:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
-    else:
-        pass
-
 def main():
     config_env = dotenv.dotenv_values(".env")
     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
@@ -119,6 +64,58 @@ def main():
     
     push_dataset(final_dataset, config_env)
     print(final_dataset)
+
+def process_dataset(row, config_env, current_dir, q):
+
+    path_to_data_files = current_dir + config_env["DATA_FILE"]
+    path_to_csv = path_to_data_files + config_env["META_DATA"]
+    new_path_to_csv = path_to_data_files + config_env["NEW_META_DATA"]
+    data_folder = path_to_data_files + config_env["DATA_FOLDER"]
+
+    youtube_link = row["youtube link"]
+
+    vc = VCtube(path_to_data_files, youtube_link, lang='vi')
+    if (vc.check_vi_available()):
+        vc.operations()
+    else:
+        return None
+
+    operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
+    operations.create_new_csv()
+    dataset = operations.create_dataset()
+    dataset = operations.remove_column()
+    dataset = operations.cast_column()
+
+    dataset = operations.filter_non_characters()
+    dataset = operations.filter_labels()
+    dataset = operations.filter_audios()
+    dataset = operations.normalize()
+
+    wav2vec2 = Wav2Vec2(cache_path=config_env["CACHE_PATH"], wav2vec2_path=config_env["WAV2VEC2_PATH"])
+    wav2vec2.get_processor()
+    wav2vec2.get_model()
+    wav2vec2.get_lm_file()
+    wav2vec2.get_decoder_ngram_model()
+
+    dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=4)
+    dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
+    dataset = dataset.filter(filter_wer)
+
+    q.put(dataset)
+
+    return dataset
+
+def push_dataset(final_dataset, config_env, index=None):
+
+    if index != None and (index+1) % 5 == 0:
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
+        print("-"*10)
+        print(f"Dataset vid_{index+1} has been pushed to hub!")
+        print("-"*10)
+    elif index == None:
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
+    else:
+        pass
 
 if __name__ == "__main__":
     mp.set_start_method('spawn')
