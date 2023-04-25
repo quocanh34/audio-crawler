@@ -85,13 +85,9 @@ class Wav2Vec2():
         # Add the new column to the example
         example['w2v2_transcription'] = new_label
 
-        max_allocated_before = torch.cuda.max_memory_allocated()
-
+        # Empty cuda
         del input_values
         torch.cuda.empty_cache()
-
-        max_allocated_after = torch.cuda.max_memory_allocated()
-        print(f"Maximum memory allocated after emptying cache: {max_allocated_after}")
 
         # Return the modified example
         return example
