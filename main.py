@@ -3,7 +3,7 @@ import pandas as pd
 import datasets
 import shutil
 import dotenv
-import multiprocessing as mp
+import torch.multiprocessing as mp
 
 from vctube import VCtube
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -98,7 +98,7 @@ def main():
 
             #push to huggingface if the index is multiple numbers of 1000
             if (index+1) % 300 == 0:
-                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_hope_vid_{index+1}", token=config_env["TOKEN"])
+                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
                 print("-"*10)
                 print(f"Dataset vid_{index+1} has been pushed to hub!")
                 print("-"*10)
@@ -108,8 +108,14 @@ def main():
         except Exception as e:
             print(f"Error in row {index+1}: {e}")
             print(f"Error in row {row}")
+            if (index+1) % 300 == 0:
+                final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
+                print("-"*10)
+                print(f"Dataset vid_{index+1} has been pushed to hub!")
+                print("-"*10)
+            shutil.rmtree(path_to_data_files)
             continue
-    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_hope_final", token=config_env["TOKEN"])
+    final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
     print(final_dataset)
 
 if __name__ == "__main__":

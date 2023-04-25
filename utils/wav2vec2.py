@@ -55,9 +55,6 @@ class Wav2Vec2():
 
 
     def add_w2v2_label(self, example):
-        # Extract the value from the original column
-        # audio_path = example['audio']['path']
-        # load dummy dataset and read soundfiles
 
         ds = {}
         ds["file"] = example['audio']['path']
@@ -87,6 +84,14 @@ class Wav2Vec2():
 
         # Add the new column to the example
         example['w2v2_transcription'] = new_label
+
+        max_allocated_before = torch.cuda.max_memory_allocated()
+
+        del input_values
+        torch.cuda.empty_cache()
+
+        max_allocated_after = torch.cuda.max_memory_allocated()
+        print(f"Maximum memory allocated after emptying cache: {max_allocated_after}")
 
         # Return the modified example
         return example
