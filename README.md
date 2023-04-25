@@ -9,5 +9,3 @@
     - pip install -r requirements.txt 
     - modify data_youtube/youtube_link.csv
     - python main.py
-    
-- test demo 1-hour dataset at https://huggingface.co/datasets/quocanh34/youtube_dataset_v6
