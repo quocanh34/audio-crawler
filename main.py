@@ -81,7 +81,7 @@ def main():
             wav2vec2.get_decoder_ngram_model()
 
             dataset = dataset['train'].map(
-                lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
+                lambda example: wav2vec2.add_w2v2_label(example), num_proc=16)
 
             # Caculate WER between Wav2Vec2 and VCTube transcription
             dataset = dataset.map(lambda example: {"WER": int(
