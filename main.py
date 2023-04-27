@@ -53,6 +53,7 @@ def main():
 
                 push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
                 shutil.rmtree(current_dir + config_env["DATA_FILE"])
+            torch.cuda.empty_cache()
 
         except Exception as e:
             print(f"Error in row {index+1}: {e}")
@@ -60,6 +61,7 @@ def main():
 
             push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
             shutil.rmtree(current_dir + config_env["DATA_FILE"])
+            torch.cuda.empty_cache()
             continue
     
     push_dataset(final_dataset, config_env)
@@ -101,13 +103,16 @@ def process_dataset(row, config_env, current_dir, q):
     dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
     dataset = dataset.filter(filter_wer)
 
+    #Empty cuda cache
+    torch.cuda.empty_cache()
+
     q.put(dataset)
 
     return dataset
 
 def push_dataset(final_dataset, config_env, index=None):
 
-    if index != None and (index+1) % 5 == 0:
+    if index != None and (index+1) % 4 == 0:
         final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
         print("-"*10)
         print(f"Dataset vid_{index+1} has been pushed to hub!")

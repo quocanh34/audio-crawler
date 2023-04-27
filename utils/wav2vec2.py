@@ -87,6 +87,8 @@ class Wav2Vec2():
 
         # Empty cuda
         del input_values
+        del logits
+        del pred_ids
         torch.cuda.empty_cache()
 
         # Return the modified example
