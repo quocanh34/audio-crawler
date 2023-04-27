@@ -113,12 +113,12 @@ def process_dataset(row, config_env, current_dir, q):
 def push_dataset(final_dataset, config_env, index=None):
 
     if index != None and (index+1) % 300 == 0:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_split8_vid_{index+1}", token=config_env["TOKEN"])
         print("-"*10)
         print(f"Dataset vid_{index+1} has been pushed to hub!")
         print("-"*10)
     elif index == None:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_split8_final", token=config_env["TOKEN"])
     else:
         pass
 
