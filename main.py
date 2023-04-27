@@ -99,7 +99,7 @@ def process_dataset(row, config_env, current_dir, q):
     wav2vec2.get_lm_file()
     wav2vec2.get_decoder_ngram_model()
 
-    dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=4)
+    dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
     dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
     dataset = dataset.filter(filter_wer)
 
