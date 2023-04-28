@@ -59,7 +59,7 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in link: {row}")
 
-            # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+            push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
             shutil.rmtree(current_dir + config_env["DATA_FILE"])
             torch.cuda.empty_cache()
             continue
