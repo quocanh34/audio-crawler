@@ -41,7 +41,7 @@ def main():
 
             if dataset is None:
                 print("Skipped Index: " + str(index+1))
-                # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+                push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
                 shutil.rmtree(current_dir + config_env["DATA_FILE"])
                 continue
 
@@ -51,7 +51,7 @@ def main():
                 print("Current index: " + str(index+1))
                 print(final_dataset)
 
-                # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+                push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
                 shutil.rmtree(current_dir + config_env["DATA_FILE"])
             torch.cuda.empty_cache()
 
@@ -64,7 +64,7 @@ def main():
             torch.cuda.empty_cache()
             continue
     
-    # push_dataset(final_dataset, config_env)
+    push_dataset(final_dataset, config_env)
     print(final_dataset)
 
 def process_dataset(row, config_env, current_dir, q):
