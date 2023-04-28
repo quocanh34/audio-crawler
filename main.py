@@ -17,7 +17,7 @@ from utils.wer import filter_wer
 
 def main():
     config_env = dotenv.dotenv_values(".env")
-    os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    # os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
     current_dir = os.getcwd()
     youtube_df = pd.read_csv(current_dir + config_env["CSV_LINK"])
 
@@ -41,7 +41,7 @@ def main():
 
             if dataset is None:
                 print("Skipped Index: " + str(index+1))
-                push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+                # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
                 shutil.rmtree(current_dir + config_env["DATA_FILE"])
                 continue
 
@@ -51,7 +51,7 @@ def main():
                 print("Current index: " + str(index+1))
                 print(final_dataset)
 
-                push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+                # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
                 shutil.rmtree(current_dir + config_env["DATA_FILE"])
             torch.cuda.empty_cache()
 
@@ -59,56 +59,60 @@ def main():
             print(f"Error in row {index+1}: {e}")
             print(f"Error in link: {row}")
 
-            push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
+            # push_dataset(final_dataset=final_dataset, config_env=config_env, index=index)
             shutil.rmtree(current_dir + config_env["DATA_FILE"])
             torch.cuda.empty_cache()
             continue
     
-    push_dataset(final_dataset, config_env)
+    # push_dataset(final_dataset, config_env)
     print(final_dataset)
 
 def process_dataset(row, config_env, current_dir, q):
+    try:
+        path_to_data_files = current_dir + config_env["DATA_FILE"]
+        path_to_csv = path_to_data_files + config_env["META_DATA"]
+        new_path_to_csv = path_to_data_files + config_env["NEW_META_DATA"]
+        data_folder = path_to_data_files + config_env["DATA_FOLDER"]
 
-    path_to_data_files = current_dir + config_env["DATA_FILE"]
-    path_to_csv = path_to_data_files + config_env["META_DATA"]
-    new_path_to_csv = path_to_data_files + config_env["NEW_META_DATA"]
-    data_folder = path_to_data_files + config_env["DATA_FOLDER"]
+        youtube_link = row["youtube link"]
 
-    youtube_link = row["youtube link"]
+        vc = VCtube(path_to_data_files, youtube_link, lang='vi')
+        if (vc.check_vi_available()):
+            vc.operations()
+        else:
+            q.put(None)
+            # return None
 
-    vc = VCtube(path_to_data_files, youtube_link, lang='vi')
-    if (vc.check_vi_available()):
-        vc.operations()
-    else:
-        return None
+        operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
+        operations.create_new_csv()
+        dataset = operations.create_dataset()
+        dataset = operations.remove_column()
+        dataset = operations.cast_column()
 
-    operations = DatasetOperations(path_to_csv, new_path_to_csv, data_folder)
-    operations.create_new_csv()
-    dataset = operations.create_dataset()
-    dataset = operations.remove_column()
-    dataset = operations.cast_column()
+        dataset = operations.filter_non_characters()
+        dataset = operations.filter_labels()
+        dataset = operations.filter_audios()
+        dataset = operations.normalize()
 
-    dataset = operations.filter_non_characters()
-    dataset = operations.filter_labels()
-    dataset = operations.filter_audios()
-    dataset = operations.normalize()
+        wav2vec2 = Wav2Vec2(cache_path=config_env["CACHE_PATH"], wav2vec2_path=config_env["WAV2VEC2_PATH"])
+        wav2vec2.get_processor()
+        wav2vec2.get_model()
+        wav2vec2.get_lm_file()
+        wav2vec2.get_decoder_ngram_model()
 
-    wav2vec2 = Wav2Vec2(cache_path=config_env["CACHE_PATH"], wav2vec2_path=config_env["WAV2VEC2_PATH"])
-    wav2vec2.get_processor()
-    wav2vec2.get_model()
-    wav2vec2.get_lm_file()
-    wav2vec2.get_decoder_ngram_model()
+        dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
+        dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
+        dataset = dataset.filter(filter_wer)
 
-    dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
-    dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
-    dataset = dataset.filter(filter_wer)
+        #Empty cuda cache
+        torch.cuda.empty_cache()
 
-    #Empty cuda cache
-    torch.cuda.empty_cache()
+        q.put(dataset)
+    except Exception as e:
+        print(f"Error: {e}")
+        q.put(None)
 
-    q.put(dataset)
-
-    return dataset
+    # return dataset
 
 def push_dataset(final_dataset, config_env, index=None):
 
