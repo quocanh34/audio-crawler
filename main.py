@@ -17,7 +17,7 @@ from utils.wer import filter_wer
 
 def main():
     config_env = dotenv.dotenv_values(".env")
-    # os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
     current_dir = os.getcwd()
     youtube_df = pd.read_csv(current_dir + config_env["CSV_LINK"])
 
