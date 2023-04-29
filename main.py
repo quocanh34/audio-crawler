@@ -100,7 +100,7 @@ def process_dataset(row, config_env, current_dir, q):
         wav2vec2.get_lm_file()
         wav2vec2.get_decoder_ngram_model()
 
-        dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=8)
+        dataset = dataset['train'].map(lambda example: wav2vec2.add_w2v2_label(example), num_proc=4)
         dataset = dataset.map(lambda example: {"WER": int(wer(example["transcription"], example["w2v2_transcription"]) * 100)})
         dataset = dataset.filter(filter_wer)
 
@@ -117,12 +117,12 @@ def process_dataset(row, config_env, current_dir, q):
 def push_dataset(final_dataset, config_env, index=None):
 
     if index != None and (index+1) % 300 == 0:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_split1_vid_{index+1}", token=config_env["TOKEN"])
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_test_vid_{index+1}", token=config_env["TOKEN"])
         print("-"*10)
         print(f"Dataset vid_{index+1} has been pushed to hub!")
         print("-"*10)
     elif index == None:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_split1_final", token=config_env["TOKEN"])
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test2_final", token=config_env["TOKEN"])
     else:
         pass
 
