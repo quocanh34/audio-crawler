@@ -3,9 +3,11 @@
 - Running on GPU clouds (vast.ai): 
     - chmod +x run_command.sh
     - ./run_command.sh
-    - modify data_youtube/youtube_link.csv
     - python main.py
+
 - Running on local:
     - pip install -r requirements.txt 
-    - modify data_youtube/youtube_link.csv
     - python main.py
+    
+- Check hours:
+    - python calculate_hours.py --dataset_path quocanh34/youtube_dataset_locfuho --wer 0
