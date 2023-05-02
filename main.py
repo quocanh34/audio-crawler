@@ -122,7 +122,7 @@ def push_dataset(final_dataset, config_env, index=None):
         print(f"Dataset vid_{index+1} has been pushed to hub!")
         print("-"*10)
     elif index == None:
-        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test2_final", token=config_env["TOKEN"])
+        final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] +"_test_final", token=config_env["TOKEN"])
     else:
         pass
 
