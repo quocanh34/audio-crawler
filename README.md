@@ -1,5 +1,7 @@
 ## Status: not completed ##
 
+- Demo 0.5-hour dataset at https://huggingface.co/datasets/quocanh34/youtube_dataset_test_final
+
 - Running on GPU clouds (vast.ai): 
     - chmod +x run_command.sh
     - ./run_command.sh
