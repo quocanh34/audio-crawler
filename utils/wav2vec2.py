@@ -55,9 +55,6 @@ class Wav2Vec2():
 
 
     def add_w2v2_label(self, example):
-        # Extract the value from the original column
-        # audio_path = example['audio']['path']
-        # load dummy dataset and read soundfiles
 
         ds = {}
         ds["file"] = example['audio']['path']
@@ -87,6 +84,12 @@ class Wav2Vec2():
 
         # Add the new column to the example
         example['w2v2_transcription'] = new_label
+
+        # Empty cuda
+        del input_values
+        del logits
+        del pred_ids
+        torch.cuda.empty_cache()
 
         # Return the modified example
         return example
