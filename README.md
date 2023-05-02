@@ -1,6 +1,6 @@
 ## Status: not completed ##
 
-- Demo 50-hour raw dataset at: https://huggingface.co/datasets/quocanh34/youtube_dataset_new4_final
+- Demo 50-hour raw dataset (WER <= 10) at: https://huggingface.co/datasets/quocanh34/youtube_dataset_new4_final
 
 - Running on GPU clouds (vast.ai): 
     - chmod +x run_command.sh
