@@ -56,9 +56,10 @@ print("The total duration of the dataset v3 WER = 10 is: " + str(calculate_hour(
 print("The total duration of the dataset v3 WER = 0 is: " + str(calculate_hour(final_dataset_wer0_v3)) + " hours.") 
 
 
-# final_dataset_wer10_v2.push_to_hub("quocanh34/final_dataset_wer10_v2", token="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")
-# final_dataset_wer10_v3.push_to_hub("quocanh34/final_dataset_wer10_v3", token="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")
+final_dataset_wer0_v2.push_to_hub("quocanh34/final_dataset_wer0_v2", token="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")
+final_dataset_wer0_v3.push_to_hub("quocanh34/final_dataset_wer0_v3", token="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")
 
-# final_dataset_wer0_v2.push_to_hub("quocanh34/final_dataset_wer0_v2", token="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")
-# final_dataset_wer0_v3.push_to_hub("quocanh34/final_dataset_wer0_v3", token="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")
+final_dataset_wer10_v2.push_to_hub("quocanh34/final_dataset_wer10_v2", token="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")
+final_dataset_wer10_v3.push_to_hub("quocanh34/final_dataset_wer10_v3", token="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")
+
 
