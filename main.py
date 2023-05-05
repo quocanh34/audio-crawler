@@ -116,7 +116,7 @@ def process_dataset(row, config_env, current_dir, q):
 
 def push_dataset(final_dataset, config_env, index=None):
 
-    if index != None and (index+1) % 300 == 0:
+    if index != None and (index+1) % 500 == 0:
         final_dataset.push_to_hub(config_env["HUGGINGFACE_HUB"] + f"_new_cut_vid_{index+1}", token=config_env["TOKEN"])
         print("-"*10)
         print(f"Dataset vid_{index+1} has been pushed to hub!")
