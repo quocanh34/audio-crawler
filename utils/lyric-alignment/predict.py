@@ -13,15 +13,16 @@ import csv
 import argparse
 import torch.multiprocessing as mp
 
-use_gpu = True
-if use_gpu:
-    if not torch.cuda.is_available():
-        use_gpu = False
-model_path = 'nguyenvulebinh/lyric-alignment'
-model = None
-tokenizer = None
-feature_extractor = None
-vocab = None
+# use_gpu = True
+# if use_gpu:
+#     if not torch.cuda.is_available():
+#         use_gpu = False
+
+# model_path = 'nguyenvulebinh/lyric-alignment'
+# model = None
+# tokenizer = None
+# feature_extractor = None
+# vocab = None
 
 def load_model():
     global model
@@ -112,18 +113,31 @@ def main(data_links, output_path, num_workers, padding):
     # Load model
     load_model()
 
-    aligned_data = data.map(audio_align, fn_kwargs = {"padding": padding}, num_proc = num_workers)
+    aligned_data = data.map(audio_align, fn_kwargs = {"padding": padding}, num_proc = 1)
     aligned_data.push_to_hub(output_path)
 
 
 if __name__ == '__main__':
     mp.set_start_method('spawn')
+    os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:24'
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_links', type=str, default='')
     parser.add_argument('--output_path', type=str, default='')
     parser.add_argument('--num_workers', type=int, default=1)
     parser.add_argument('--padding', type=int, default=1000)
     args = parser.parse_args()
+
+    use_gpu = True
+    if use_gpu:
+        if not torch.cuda.is_available():
+            use_gpu = False
+
+    model_path = 'nguyenvulebinh/lyric-alignment'
+    model = None
+    tokenizer = None
+    feature_extractor = None
+    vocab = None
+
     main(args.data_links, args.output_path, args.num_workers, args.padding)
 
 
