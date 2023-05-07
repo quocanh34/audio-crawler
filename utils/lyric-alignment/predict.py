@@ -31,7 +31,7 @@ def load_model():
 
     model = Wav2Vec2ForCTC.from_pretrained(model_path).eval()
     if use_gpu:
-        model = model.cuda()
+        model = model.to("cuda")
 
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     feature_extractor = AutoFeatureExtractor.from_pretrained(model_path)
@@ -44,7 +44,7 @@ def do_asr(waveform):
         waveform
     ], return_tensors='pt')["input_values"]
     if use_gpu:
-        input_values = input_values.cuda()
+        input_values = input_values.to("cuda")
 
     out_values = model(input_values=input_values)
     logits = out_values.logits[0]
@@ -102,8 +102,8 @@ def audio_align(example, padding):
     audio_start = word_piece[0]['x0']
     audio_end = word_piece[-1]['x1']
     example['audio']['array'] = example['audio']['array'][audio_start:audio_end + padding]
+    torch.cuda.empty_cache()
     return example
-
 
 def main(data_links, output_path, num_workers, padding):
     # Load data
@@ -125,3 +125,5 @@ if __name__ == '__main__':
     parser.add_argument('--padding', type=int, default=1000)
     args = parser.parse_args()
     main(args.data_links, args.output_path, args.num_workers, args.padding)
+
+
