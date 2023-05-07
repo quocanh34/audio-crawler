@@ -16,7 +16,7 @@ class Point:
     token_index: int
     time_index: int
     score: float
-    
+
 # Merge the labels
 @dataclass
 class Segment:
@@ -31,10 +31,10 @@ class Segment:
     @property
     def length(self):
         return self.end - self.start
-    
+
 
 def itn_text(word):
-    
+
     word = word.lower().strip(' -.?!,)("\'…“”*_[]’')
     word = re.sub(r'[ {}]'.format(re.escape('-.?!,)("\'…“”*_[]’')), ' ', word)
     word = re.sub(r'\s+', ' ', word)
@@ -50,7 +50,7 @@ def itn_text(word):
         if len(set(list(word)).intersection(set(list('0123456789')))) > 0:
             read_form = TTSnorm(word).lower().strip('. ')
             return read_form
-    return word     
+    return word
 
 def norm_word(text):
     text = re.sub('\s+', ' ', text).strip(' -.?!,)("\'…“”*_[]’')
@@ -163,18 +163,18 @@ def add_pad(word_segments, emission, shift_val=1):
         else:
             word.end = next_word.start
         next_word.start -= shift_val
-        
+
 #         if word.end - word.start <= 70:
 #             word.start -= 1
 #             word.end += 1
 #         elif word.end - word.start < 7:
 #             word.start -= 2
 #             word.end += 2
-        
+
     word = word_segments[-1]
-    word_segments[-1].end = min(len(emission), word_segments[-1].end + 40)
+    #word_segments[-1].end = min(len(emission), word_segments[-1].end + 40)
     word_segments[0].start = max(0, word_segments[0].start - 50)
-    
+
     return word_segments
 
 def shift_align(lyric_alignment, shift_ms=120):
@@ -190,7 +190,7 @@ def shift_align(lyric_alignment, shift_ms=120):
         if len(seg['l']) > 0:
             seg['s'] = seg['l'][0]['s']
             seg['e'] = seg['l'][-1]['e']
-    
+
     return lyric_alignment
 
 def load_test_case(data_path):
@@ -203,7 +203,7 @@ def load_test_case(data_path):
             map_test_case[id] = {
                 'path_wav': item
             }
-            
+
     for item in all_json_file:
         id = item.split('/')[-1].split('.')[0]
         if map_test_case.get(id, None) is not None:
