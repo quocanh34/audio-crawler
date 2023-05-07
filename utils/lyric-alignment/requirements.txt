@@ -7,3 +7,6 @@ regtag
 vinorm
 matplotlib
 tqdm
+datasets
+librosa 
+soundfile

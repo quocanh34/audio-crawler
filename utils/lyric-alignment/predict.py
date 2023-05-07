@@ -11,6 +11,7 @@ import json
 import time
 import csv
 import argparse
+import torch.multiprocessing as mp
 
 use_gpu = True
 if use_gpu:
@@ -116,6 +117,7 @@ def main(data_links, output_path, num_workers, padding):
 
 
 if __name__ == '__main__':
+    mp.set_start_method('spawn')
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_links', type=str, default='')
     parser.add_argument('--output_path', type=str, default='')
