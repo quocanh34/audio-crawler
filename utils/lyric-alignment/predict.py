@@ -111,7 +111,7 @@ def main(data_links, output_path, num_workers, padding):
     # Load model
     load_model()
 
-    aligned_data = data.map(audio_align, fn_kwargs = {"padding", padding}, num_proc = num_workers)
+    aligned_data = data.map(audio_align, fn_kwargs = {"padding": padding}, num_proc = num_workers)
     aligned_data.push_to_hub(output_path)
 
 
