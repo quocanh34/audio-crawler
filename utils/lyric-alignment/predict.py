@@ -114,7 +114,7 @@ def main(data_links, output_path, num_workers, padding):
     load_model()
 
     aligned_data = data.map(audio_align, fn_kwargs = {"padding": padding}, num_proc = 1)
-    aligned_data.push_to_hub(output_path)
+    aligned_data.push_to_hub("quocanh34/test_cut_audio", token="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")
 
 
 if __name__ == '__main__':
