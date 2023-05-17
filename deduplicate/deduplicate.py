@@ -20,3 +20,6 @@ updated_ds = ds["train"].map(add_sum)
 # deduplicate
 deduplicate = Deduplicate(updated_ds)
 deduplicated_ds = deduplicate.run_deduplicate()
+
+deduplicated_ds.push_to_hub('linhtran92/deduplicated_dataset_400hrs_wer0',
+                            token='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')
