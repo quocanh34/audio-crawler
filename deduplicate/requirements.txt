@@ -2,4 +2,3 @@ datasets
 soundfile
 numpy
 pandas
-collections
