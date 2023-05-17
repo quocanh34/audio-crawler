@@ -15,7 +15,7 @@ def add_sum(example):
     return example
 
 
-updated_ds = ds["train"].map(add_sum)
+updated_ds = ds["train"].map(add_sum, num_proc=8)
 
 # deduplicate
 deduplicate = Deduplicate(updated_ds)
