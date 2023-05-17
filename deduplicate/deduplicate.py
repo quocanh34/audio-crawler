@@ -4,7 +4,7 @@ import numpy as np
 from datasets import load_dataset
 from utils import Deduplicate
 
-data_link = "quocanh34/final_dataset_wer0_400hrs"
+data_link = "linhtran92/duplicated_dataset"
 
 # load dataset and add sum column
 ds = datasets.load_dataset(data_link)
@@ -15,7 +15,7 @@ def add_sum(example):
     return example
 
 
-updated_ds = ds["train"].map(add_sum)
+updated_ds = ds["train"].map(add_sum, num_proc=8)
 
 # deduplicate
 deduplicate = Deduplicate(updated_ds)
