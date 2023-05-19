@@ -4,7 +4,7 @@ import numpy as np
 from datasets import load_dataset
 from utils import Deduplicate
 
-data_link = "quocanh34/final_dataset_wer0_400hrs"
+data_link = "https://huggingface.co/datasets/quocanh34/wer0_cut_v1"
 
 # load dataset and add sum column
 ds = datasets.load_dataset(data_link)
@@ -21,5 +21,5 @@ updated_ds = ds["train"].map(add_sum, num_proc=8)
 deduplicate = Deduplicate(updated_ds)
 deduplicated_ds = deduplicate.run_deduplicate()
 
-deduplicated_ds.push_to_hub('linhtran92/deduplicated_dataset_400hrs_wer0',
+deduplicated_ds.push_to_hub('linhtran92/deduplicated_dataset_100hrs_wer0_cut',
                             token='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')
