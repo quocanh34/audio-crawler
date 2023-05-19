@@ -19,8 +19,6 @@ ds_2 = split_dataset(ds, 2)
 ds_3 = split_dataset(ds, 3)
 
 ds_1.push_to_hub("quocanh34/viet_youtube_asr_v1", token="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")
-ds_2.push_to_hub("quocanh34/viet_youtube_asr_v2", token="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")
-ds_3.push_to_hub("quocanh34/viet_youtube_asr_v3", token="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")
 
 print(f"Total rows: {ds['train'].num_rows}")
 print(f"ds1: {ds_1}")
