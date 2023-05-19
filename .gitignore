@@ -5,4 +5,4 @@ cache/
 data_files/
 audio-crawl/
 utils/__pycache__/
-lyric-alignment/__pycache__
+lyric-alignment/__pycache__/
