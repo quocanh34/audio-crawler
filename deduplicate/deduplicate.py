@@ -4,7 +4,7 @@ import numpy as np
 from datasets import load_dataset
 from utils import Deduplicate
 
-data_link = "https://huggingface.co/datasets/quocanh34/wer0_cut_v1"
+data_link = "quocanh34/wer0_cut_v1"
 
 # load dataset and add sum column
 ds = datasets.load_dataset(data_link)
