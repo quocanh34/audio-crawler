@@ -10,8 +10,7 @@ def get_split(dataset, split, order, test_size):
     end = start + split_len if order != split else len(dataset['train']) 
     return dataset['train'].select(range(start, end)).train_test_split(test_size)
 
-# ds = load_dataset("linhtran92/final_dataset_500hrs_wer0")
-ds = load_dataset("quocanh34/youtube_dataset_locfuho")
+ds = load_dataset("linhtran92/final_dataset_500hrs_wer0")
 ds = ds.shuffle(seed=42)
 
 ds_1 = get_split(ds, split=3, order=1, test_size=0.1)
