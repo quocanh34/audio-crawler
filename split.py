@@ -16,11 +16,11 @@ def get_split(dataset, split, order, test_size):
                         "test": test_ds,
                         "validation": val_ds})
 
-ds = load_dataset("linhtran92/dataset_500hrs_wer0")
+ds = load_dataset("linhtran92/final_dataset_500hrs_wer0", use_auth_token="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")
 ds = ds.shuffle(seed=42)
 
-ds_1 = get_split(ds, split=2, order=1, test_size=7500/649158)
-ds_2 = get_split(ds, split=2, order=2, test_size=7500/649158)
+ds_1 = get_split(ds, split=2, order=1, test_size=15000/649158)
+ds_2 = get_split(ds, split=2, order=2, test_size=15000/649158)
 
 print(f"Total rows: {ds['train'].num_rows}")
 print(f"ds1: {ds_1}")
