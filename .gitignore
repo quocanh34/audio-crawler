@@ -2,3 +2,7 @@ crawl/
 cache/
 data_files/
 audio-crawl/
+__pycache__/
+.cph/
+utils/__pycache__/
+vctube/__pycache__/
